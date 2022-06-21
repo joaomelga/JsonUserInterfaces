@@ -1,0 +1,157 @@
+[
+    {
+        "id": "prod",
+        "context": "custom",
+        "redirects": ["menu"]
+    },
+    {
+        "id": "menu",
+        "context": "navigation",
+        "title": "Menu",
+        "options": [
+            {
+                "title": "Voltar",
+                "redirects": ["prod"]
+            },
+            {
+                "title": "Preferencias",
+                "redirects": ["pref"]
+            },
+            {
+                "title": "Calibracoes",
+                "redirects": ["cali"]
+            }
+        ]
+    },
+    {
+        "id": "pref",
+        "context": "navigation",
+        "title": "Preferencias",
+        "options": [
+            {
+                "title": "Voltar",
+                "redirects": ["menu"]
+            },
+            {
+                "title": "Setup",
+                "redirects": ["setup"]
+            },
+            {
+                "title": "Peso desejado",
+                "redirects": ["desired-weight"]
+            },
+            {
+                "title": "Tolerancia peso",
+                "redirects": ["weight-tolerance"]
+            },
+            {
+                "title": "Potencia motor",
+                "redirects": ["motor-power"]
+            }
+        ]
+    },
+    {
+        "id": "setup",
+        "context": "editing",
+        "title": "Setup",
+        "redirects": ["parameter-success"]
+    },
+    {
+        "id": "desired-weight",
+        "context": "editing",
+        "title": "Peso desejado",
+        "redirects": ["parameter-success"]
+    },
+    {
+        "id": "weight-tolerance",
+        "context": "editing",
+        "title": "Tolerancia peso",
+        "redirects": ["parameter-success"]
+    },
+    {
+        "id": "motor-power",
+        "context": "editing",
+        "title": "Potencia motor",
+        "redirects": ["parameter-success"]
+    },
+    {
+        "id": "cali",
+        "context": "navigation",
+        "title": "Calibracoes",
+        "options": [
+            {
+                "title": "Voltar",
+                "redirects": ["menu"]
+            },
+            {
+                "title": "Balanca",
+                "redirects": ["scale-factor"]
+            },
+            {
+                "title": "Bico",
+                "redirects": ["injector"]
+            },
+            {
+                "title": "Sensor",
+                "redirects": ["sensor-holding-time"]
+            }
+        ]
+    },
+    {
+        "id": "scale-factor",
+        "context": "editing",
+        "title": "Balanca",
+        "redirects": ["parameter-success"]
+    },
+    {
+        "id": "injector",
+        "context": "navigation",
+        "title": "Bico",
+        "options": [
+            {
+                "title": "Voltar",
+                "redirects": ["menu"]
+            },
+            {
+                "title": "Tempo de pico",
+                "redirects": ["injector-transient"]
+            },
+            {
+                "title": "Potencia",
+                "redirects": ["injector-power"]
+            }
+        ]
+    },
+    {
+        "id": "injector-transient",
+        "context": "editing",
+        "title": "Tempo de pico",
+        "redirects": ["parameter-success"]
+    },
+    {
+        "id": "injector-power",
+        "context": "editing",
+        "title": "Potencia do bico",
+        "redirects": ["parameter-success"]
+    },
+    {
+        "id": "sensor-holding-time",
+        "context": "editing",
+        "title": "Debounce sensor",
+        "redirects": ["parameter-success"]
+    },
+    {
+        "id": "parameter-success",
+        "context": "messaging",
+        "title": "Sucesso!",
+        "timeout": "1500",
+        "redirects": ["menu"]
+    },
+    {
+        "id": "parameter-canceled",
+        "context": "messaging",
+        "title": "Cancelado!",
+        "timeout": "1500",
+        "redirects": ["menu"]
+    }
+]

@@ -19,7 +19,6 @@
 #define DISPLAY_Y_DIVISIONS 4
 
 #include <Arduino.h>
-#include <ArduinoJson.h>
 #include <Wire.h>
 
 // enum { simpleClick } events;
@@ -55,6 +54,7 @@ class Pages {
     void setCursorSuperiorLimit(uint8_t upLimit) { _cursorSuperiorLimit = upLimit; };
     void setPageDivisions(uint8_t pageDivisions) { _pageDivisions = pageDivisions; };
     void setDisplayabeDivisions(uint8_t displayableDivisions) { _displayableDivisions = displayableDivisions; };
+    void setUpdateFlag() { _updateFlag = 1; };
 
     uint8_t getPageShift() { return _pageShift; };
     uint8_t getCursorPosition() { return _cursorPosition; };

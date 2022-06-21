@@ -1,6 +1,8 @@
-#include "Pages.h"
-
+#include "JsonUserInterfaces.h"
 #include <SPIFFS.h>
+#include "ArduinoJson-v6.19.4.h"
+
+#define JSON_DEFAULT_SIZE 4096
 
 Pages::Pages() {
     // screenSize = 8; // sizeof(pageLines) / sizeof(pageLines[0]);
@@ -18,8 +20,9 @@ void Pages::setPage(String pageId) {
 
     _pagesJson = String(fileContent);
 
-    DynamicJsonDocument pages(1024);
+    DynamicJsonDocument pages(JSON_DEFAULT_SIZE);
     deserializeJson(pages, _pagesJson);  //, DeserializationOption::Filter(filter));
+    Serial.println(_pagesJson);
 
     for (uint8_t pageIndex = 0; pageIndex < pages.size(); pageIndex++) {
         if (pages[pageIndex]["id"].as<String>() == String(pageId)) {
@@ -38,11 +41,15 @@ void Pages::setPage(String pageId) {
                 _cursorSuperiorLimit = 1;
 
                 uint8_t optionsIndex = 0;
+
+                for (uint8_t i = 0; i < MAX_PAGE_OPTIONS; i++) {
+                    _pageOptions[i] = "";
+                }
+
                 for (JsonVariant option : pageOptionsJson) {
                     _pageOptions[optionsIndex] = option["title"].as<String>();
                     optionsIndex++;
                 }
-
             } else if (_pageContext == "editing") {
                 _pageDivisions = 20;
                 _displayableDivisions = _pageDivisions;
@@ -56,10 +63,13 @@ void Pages::setPage(String pageId) {
             return;
         }
     }
+
+    file.close();
+    pages.clear();
 }
 
 void Pages::redirect(uint8_t redirectionIndex) {
-    DynamicJsonDocument pages(1024);
+    DynamicJsonDocument pages(JSON_DEFAULT_SIZE);
     deserializeJson(pages, _pagesJson);  //, DeserializationOption::Filter(filter));
 
     _pageContext = pages[_pageIndex]["context"].as<String>();
@@ -71,7 +81,7 @@ void Pages::redirect(uint8_t redirectionIndex) {
             setPage(jsonRedirects[redirectionIndex].as<String>());
             _updateFlag = 1;
         }
-    } else if (_pageContext == "editing" || _pageContext == "messaging") {
+    } else {
         JsonArray jsonRedirects = pages[_pageIndex]["redirects"];
 
         if (jsonRedirects != NULL) {
@@ -79,6 +89,8 @@ void Pages::redirect(uint8_t redirectionIndex) {
             _updateFlag = 1;
         }
     }
+
+    pages.clear();
 }
 
 void Pages::decreaseCursorPosition() {
