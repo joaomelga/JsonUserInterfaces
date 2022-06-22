@@ -1,5 +1,7 @@
 #include "JsonUserInterfaces.h"
+
 #include <SPIFFS.h>
+
 #include "ArduinoJson-v6.19.4.h"
 
 #define JSON_DEFAULT_SIZE 4096
@@ -11,18 +13,27 @@ Pages::Pages() {
     _selectedDivision = 0;
 }
 
-void Pages::setPage(String pageId) {
+String Pages::getSerialized() {
     File file = SPIFFS.open("/pages.json");
+
+    /* if (!file || file.isDirectory()) {
+        Serial.println("Failed to open file for reading");
+        return "";
+    } */
 
     char fileContent[file.size()];
     for (uint16_t i = 0; file.available(); i++)
         fileContent[i] = file.read();
 
-    _pagesJson = String(fileContent);
+    file.close();
+    return String(fileContent);
+}
+
+void Pages::setPage(String pageId) {
+    _pagesJson = getSerialized();
 
     DynamicJsonDocument pages(JSON_DEFAULT_SIZE);
-    deserializeJson(pages, _pagesJson);  //, DeserializationOption::Filter(filter));
-    Serial.println(_pagesJson);
+    deserializeJson(pages, _pagesJson);
 
     for (uint8_t pageIndex = 0; pageIndex < pages.size(); pageIndex++) {
         if (pages[pageIndex]["id"].as<String>() == String(pageId)) {
@@ -31,6 +42,11 @@ void Pages::setPage(String pageId) {
             _pageIndex = pageIndex;
             _pageShift = 0;
             _pageTitle = pages[pageIndex]["title"].as<String>();
+
+            if (pages[pageIndex].containsKey("timeout")) {
+                _pageTimeout = pages[pageIndex]["timeout"].as<uint16_t>();
+                _timeoutRef = millis();
+            }
 
             if (_pageContext == "navigation") {
                 JsonArray pageOptionsJson = pages[pageIndex]["options"].as<JsonArray>();
@@ -54,9 +70,6 @@ void Pages::setPage(String pageId) {
                 _pageDivisions = 20;
                 _displayableDivisions = _pageDivisions;
                 _cursorSuperiorLimit = 0;
-            } else if (_pageContext == "messaging") {
-                _timeoutRef = millis();
-                _pageTimeout = pages[pageIndex]["timeout"].as<uint16_t>();
             }
 
             _cursorPosition = _cursorSuperiorLimit;
@@ -64,7 +77,6 @@ void Pages::setPage(String pageId) {
         }
     }
 
-    file.close();
     pages.clear();
 }
 
@@ -106,7 +118,7 @@ void Pages::decreaseCursorPosition() {
         _selectedDivision = 0;
     }
 
-    _updateFlag = 1;
+    setUpdateFlag();
 }
 
 void Pages::increaseCursorPosition() {
@@ -122,8 +134,13 @@ void Pages::increaseCursorPosition() {
         _selectedDivision = _pageDivisions - 1;
     }
 
-    _updateFlag = 1;
+    setUpdateFlag();
 }
+
+void Pages::setUpdateFlag() {
+    _timeoutRef = millis();
+    _updateFlag = 1;
+};
 
 uint8_t Pages::getUpdateFlag() {
     if (_updateFlag) {

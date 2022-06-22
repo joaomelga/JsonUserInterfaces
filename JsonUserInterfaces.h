@@ -25,13 +25,13 @@
 
 class Pages {
    private:
-    uint8_t _pageIndex;
-    uint8_t _pageShift;
-    uint8_t _pageDivisions;
-    uint8_t _cursorPosition;
+    uint8_t _pageIndex = 0;
+    uint8_t _pageShift = 0;
+    uint8_t _pageDivisions = 1;
+    uint8_t _cursorPosition = 0;
     uint8_t _cursorSuperiorLimit = 1;
-    uint8_t _displayableDivisions;
-    uint8_t _selectedDivision;
+    uint8_t _displayableDivisions = 1;
+    uint8_t _selectedDivision = 0;
     uint8_t _updateFlag = 1;
 
     uint16_t _pageTimeout = 0;
@@ -40,7 +40,7 @@ class Pages {
 
     String _pageId;
     String _pageContext;
-    String _pagesJson = "[{\"id\":\"prod\",\"context\":\"custom\"},{\"id\":\"menu\",\"context\":\"navigation\",\"title\":\"Menu\",\"options\":[{\"title\":\"Preset\",\"redirects\":[\"preset\"]},{\"title\":\"Ajustes\",\"redirects\":[\"adjusts\"]},{\"title\":\"Calibracoes\"},{\"title\":\"Historico\"}]},{\"id\":\"adjusts\",\"context\":\"navigation\",\"title\":\"Ajustes\",\"options\":[{\"title\":\"Teste1\",\"redirects\":[\"menu\"]},{\"title\":\"Teste2\"},{\"title\":\"Teste3\"},{\"title\":\"Teste4\"}]},{\"id\":\"preset\",\"context\":\"editing\",\"title\":\"AjustaPreset\",\"parameterId\":\"preset\",\"significativeValues\":4,\"redirects\":[\"menu\"]}]";
+    String _pagesJson;
     String _pageTitle;
     String _pageOptions[MAX_PAGE_OPTIONS];
 
@@ -54,8 +54,9 @@ class Pages {
     void setCursorSuperiorLimit(uint8_t upLimit) { _cursorSuperiorLimit = upLimit; };
     void setPageDivisions(uint8_t pageDivisions) { _pageDivisions = pageDivisions; };
     void setDisplayabeDivisions(uint8_t displayableDivisions) { _displayableDivisions = displayableDivisions; };
-    void setUpdateFlag() { _updateFlag = 1; };
-
+    void setUpdateFlag();
+    void setCursorPosition(uint8_t position) { _cursorPosition = position; };
+    
     uint8_t getPageShift() { return _pageShift; };
     uint8_t getCursorPosition() { return _cursorPosition; };
     uint8_t getCursorSuperiorLimit() { return _cursorSuperiorLimit; };
@@ -68,6 +69,7 @@ class Pages {
     String getPageContext() { return _pageContext; };
     String getPageTitle() { return _pageTitle; };
     String* getPageOptions() { return _pageOptions; };
+    String getSerialized();
 };
 
 #endif
