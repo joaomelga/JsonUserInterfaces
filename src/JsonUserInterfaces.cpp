@@ -1,8 +1,8 @@
 #include "JsonUserInterfaces.h"
+#include "ArduinoJson-v6.19.4.h"
 
 #include <SPIFFS.h>
 
-#include "ArduinoJson-v6.19.4.h"
 
 #define JSON_DEFAULT_SIZE 4096
 
@@ -46,7 +46,7 @@ void Pages::setPage(String pageId) {
             if (pages[pageIndex].containsKey("timeout")) {
                 _pageTimeout = pages[pageIndex]["timeout"].as<uint16_t>();
                 _timeoutRef = millis();
-            }
+            } else _pageTimeout = 0;
 
             if (_pageContext == "navigation") {
                 JsonArray pageOptionsJson = pages[pageIndex]["options"].as<JsonArray>();

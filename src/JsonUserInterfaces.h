@@ -63,7 +63,7 @@ class Pages {
     uint8_t getDisplayableDivisions() { return _displayableDivisions; };
     uint8_t getPageDivisions() { return _pageDivisions; };
     uint8_t getUpdateFlag();
-    uint8_t pageIsTimedout() { return millis() - _timeoutRef > _pageTimeout; };
+    uint8_t pageIsTimedout() { return _pageTimeout && (millis() - _timeoutRef > _pageTimeout); };
 
     String getPageId() { return String(_pageId); };
     String getPageContext() { return _pageContext; };
