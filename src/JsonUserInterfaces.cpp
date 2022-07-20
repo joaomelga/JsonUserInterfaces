@@ -73,6 +73,7 @@ void Pages::setPage(String pageId) {
             }
 
             _cursorPosition = _cursorSuperiorLimit;
+            setUpdateFlag();
             return;
         }
     }
